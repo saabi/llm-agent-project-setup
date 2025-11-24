@@ -2277,6 +2277,22 @@ main (production)
 
 ---
 
+### Merge Strategies
+
+When merging feature branches into main, staging, or dev branches, teams use different strategies:
+
+- **Merge as-is:** Preserves all commits with a merge commit (complete history)
+- **Squash and merge:** Combines all commits into one with comprehensive message (clean history)
+- **Rebase and merge:** Replays commits linearly without merge commit (linear history, preserved commits)
+- **Squash + Rebase:** Combines commits, then rebases (cleanest possible history)
+
+**See:** [Branch Management Guide - Merge Strategies](./docs/process/BRANCH_MANAGEMENT.md#merge-strategies) for detailed comparison, pros/cons, and recommendations for each branch type.
+
+**Recommendation:**
+- **Feature → Dev:** Merge as-is (preserve development history)
+- **Feature → Staging:** Squash and merge (clean history for testing)
+- **Staging → Main:** Squash and merge (clean production history)
+
 ### Best Practices
 
 1. **Protect Production Branch:**
@@ -2305,6 +2321,12 @@ main (production)
    - Keep environments similar
    - Test in staging what you deploy to production
    - Document environment differences
+
+6. **Consistent Merge Strategy:**
+   - Choose merge strategy per branch type
+   - Document your team's choice
+   - Use consistently across the project
+   - Update helper scripts to use chosen strategy
 
 ---
 
