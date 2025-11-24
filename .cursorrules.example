@@ -1,0 +1,51 @@
+# Cursor Rules for AI Agents
+
+This file contains rules and guidelines for AI agents working in this codebase.
+
+**Note:** This is an example `.cursorrules` file. Adapt it to your project's specific needs and guidelines.
+
+## Required Guidelines
+
+### Commit Guidelines
+
+When creating commits, writing commit messages, or suggesting commit messages, **ALWAYS** reference and follow the guidelines in:
+- `docs/process/COMMITS.md`
+
+Key requirements:
+- Use Conventional Commits format: `<type>(<scope>): <subject>`
+- Follow the commit message structure and examples provided
+- Ensure commits are atomic and well-structured
+- Reference related issues/tickets in commit messages
+
+**Before suggesting or creating commits, read `docs/process/COMMITS.md` to ensure compliance.**
+
+### Ticket Composition Guidelines
+
+When creating tickets, issue descriptions, or suggesting ticket content, **ALWAYS** reference and follow the guidelines in:
+- `docs/process/TICKETS.md`
+
+Key requirements:
+- Use the provided ticket structure and templates
+- Include clear acceptance criteria
+- Follow title formatting guidelines
+- Use appropriate labels and categorization
+- Include all required fields based on ticket type
+
+**Before suggesting or creating tickets, read `docs/process/TICKETS.md` to ensure compliance.**
+
+## General Guidelines
+
+1. **Always load and reference the guidelines** before working on commits or tickets
+2. **Follow the examples** provided in the guideline documents
+3. **Suggest improvements** if the guidelines are not being followed
+4. **Ask for clarification** if the guidelines are unclear or conflicting
+
+## When to Load Guidelines
+
+- When user asks about commits or commit messages
+- When user asks about tickets or issue creation
+- When creating or editing commit messages
+- When creating or editing ticket descriptions
+- When reviewing code that includes commit or ticket references
+- When suggesting workflow improvements related to commits or tickets
+
