@@ -1,0 +1,9 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation Question
+    url: https://github.com/YOUR_USERNAME/llm-agent-project-setup/discussions
+    about: Ask questions about using this project structure
+  - name: Feature Request
+    url: https://github.com/YOUR_USERNAME/llm-agent-project-setup/issues/new?template=multi-agent-support.md
+    about: Request a new feature or enhancement
+
