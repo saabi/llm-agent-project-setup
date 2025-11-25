@@ -1152,6 +1152,7 @@ Branch management strategies vary significantly based on:
 | Single agent, remote work | Feature Branch + PR | Use GitHub/GitLab for backup and review |
 | Multiple agents, single local copy | Sequential Work or Task Division | Need coordination, avoid conflicts |
 | Multiple agents, multiple local copies | Distributed Feature Branches | Best for parallel work, merge via remote |
+| Multiple agents, same machine (parallel) | Git Worktrees | Most efficient for parallel work on one machine |
 | Multiple agents, remote work | PR-Based Workflow | Full GitHub/GitLab integration |
 | Hybrid (local + remote) | Feature Branch + Remote Sync | Local development, remote coordination |
 
@@ -1366,7 +1367,57 @@ Remote (GitHub/GitLab):
 
 ---
 
-### Strategy 6: PR-Based Workflow (Multiple Agents, Remote-First)
+### Strategy 6: Git Worktrees (Multiple Agents, Same Machine)
+
+**Best for:** Multiple agents working in parallel on the same machine, each on different branches
+
+**Overview:**
+Git worktrees allow you to have multiple working directories for the same repository, each checked out to a different branch. This is more efficient than cloning the repository multiple times because:
+- Shared `.git` directory (saves disk space)
+- Shared object database
+- All worktrees share the same repository history
+- Each worktree has its own working directory and branch
+
+**Basic Workflow:**
+```
+Main repository: /path/to/project (main branch)
+├── Worktree 1: /path/to/project-wt1 (feature/T-001)
+├── Worktree 2: /path/to/project-wt2 (feature/T-002)
+└── Worktree 3: /path/to/project-wt3 (feature/T-003)
+```
+
+**Quick Start:**
+```bash
+# Create worktree for each agent
+cd /path/to/project
+git worktree add ../project-wt1 -b feature/T-001-database-setup
+git worktree add ../project-wt2 -b feature/T-002-schema
+
+# Each agent works in their own worktree
+cd ../project-wt1  # Agent 1
+cd ../project-wt2  # Agent 2
+```
+
+**Pros:**
+- ✅ True parallelism on same machine
+- ✅ No need for multiple clones (saves disk space)
+- ✅ Shared repository history
+- ✅ Each agent has isolated working directory
+- ✅ Perfect for agent-assisted development
+
+**Cons:**
+- ⚠️ Requires understanding of git worktrees
+- ⚠️ Need to manage worktree paths
+- ⚠️ Can't have same branch checked out in multiple worktrees
+
+**Recommendation for This Project:**
+✅ **Highly Recommended for Parallel Agent Work** - Most efficient way to have multiple agents work in parallel on the same machine.
+
+**For detailed implementation, commands, best practices, and examples, see:** [Branch Management Guide - Git Worktrees](./docs/process/BRANCH_MANAGEMENT.md#option-a-git-worktrees-recommended)
+
+---
+
+### Strategy 7: PR-Based Workflow (Multiple Agents, Remote-First)
 
 **Best for:** Teams using GitHub/GitLab issues and pull requests
 
@@ -1413,7 +1464,7 @@ Closes #42"`
 
 ---
 
-### Strategy 7: Hybrid Approach (Recommended for This Project)
+### Strategy 8: Hybrid Approach (Recommended for This Project)
 
 **Best for:** Local-first development with remote coordination and optional parallel agents
 
@@ -1643,40 +1694,28 @@ git push origin --delete feature/T-001-database-setup
 
 #### Phase 2: Multiple Agents (If Needed)
 
-**Strategy:** Hybrid Approach with Task Division
+**Strategy Options:**
 
-**Workflow:**
-1. Each agent has own local copy (or coordinate on single copy)
-2. Divide work by area (backend, frontend, docs, tests)
-3. Work on different tickets
-4. Sync via remote regularly
-5. Merge in coordination
+**Option A: Git Worktrees (Recommended for Same Machine)**
+- Most efficient for parallel work on same machine
+- Each agent has own worktree directory
+- Shared repository (saves disk space)
+- True parallelism without conflicts
+- See [Strategy 6: Git Worktrees](#strategy-6-git-worktrees-multiple-agents-same-machine) for overview
+- See [Branch Management Guide - Git Worktrees](./docs/process/BRANCH_MANAGEMENT.md#option-a-git-worktrees-recommended) for detailed implementation
 
-**Coordination:**
-- Use ticket system to assign work
-- Document current work in tickets
-- Pull before starting: `git pull origin main`
-- Push frequently: `git push origin feature/T-XXX`
-- Coordinate merges
+**Option B: Multiple Local Copies (Different Machines)**
+- Each agent has own cloned repository
+- Work on different tickets/areas
+- Sync via remote repository
+- See [Strategy 5: Distributed Feature Branches](#strategy-5-distributed-feature-branches-multiple-agents-multiple-local-copies) for details
 
-**File Division Example:**
-- Agent 1 (Backend): `app/src/lib/server/**`, `app/src/routes/api/**`
-- Agent 2 (Frontend): `app/src/lib/components/**`, `app/src/routes/app/**`
-- Agent 3 (Docs): `docs/**`
-- Agent 4 (Tests): `app/tests/**`, `app/e2e/**`
+**Option C: Task Division (Single Copy)**
+- Divide work by area (backend, frontend, docs, tests)
+- Coordinate to avoid file conflicts
+- See [Strategy 4: Task Division](#strategy-4-task-division-multiple-agents-single-local-copy) for details
 
-**Lock File Approach (Single Copy):**
-```bash
-# Before starting work
-if [ -f .agent-lock ]; then
-  echo "Another agent is working. Current agent: $(cat .agent-lock)"
-  exit 1
-fi
-echo "agent-1" > .agent-lock
-
-# After completing work
-rm .agent-lock
-```
+**Recommendation:** Use Git Worktrees (Option A) for same machine, or Multiple Local Copies (Option B) for different machines. See [Branch Management Guide](./docs/process/BRANCH_MANAGEMENT.md#phase-2-multiple-agents-if-needed) for detailed workflows and examples.
 
 ---
 
@@ -1796,9 +1835,10 @@ echo "Completed $TICKET"
 **For This Project (Local-First, Single Copy, Considering Parallel Agents):**
 
 1. **Start with:** Simple Feature Branch + Remote Sync
-2. **If adding agents:** Hybrid Approach with Task Division
-3. **If true parallelism needed:** Distributed Feature Branches (multiple local copies)
-4. **Optional:** GitHub/GitLab integration for coordination
+2. **If adding agents (same machine):** Git Worktrees (most efficient)
+3. **If adding agents (different machines):** Distributed Feature Branches (multiple local copies)
+4. **Alternative:** Hybrid Approach with Task Division
+5. **Optional:** GitHub/GitLab integration for coordination
 
 **Key Recommendations:**
 - ✅ Use feature branches for each ticket

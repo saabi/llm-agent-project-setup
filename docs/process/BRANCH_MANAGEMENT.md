@@ -86,22 +86,278 @@ git push origin v1.0.0
 
 ### Phase 2: Multiple Agents (If Needed)
 
-**Strategy:** Hybrid Approach with Task Division
+**Strategy Options:**
 
-**Option A: Single Local Copy (Sequential)**
-- Agents work one at a time
-- Use lock file for coordination
-- Pull before starting, push when done
+**Option A: Git Worktrees (Highly Recommended for Same Machine)**
+- Most efficient for parallel work on same machine
+- Each agent has own worktree directory
+- Shared repository (saves disk space)
+- True parallelism without conflicts
+- Perfect for agent-assisted development
 
 **Option B: Multiple Local Copies (Parallel)**
-- Each agent has own local copy
+- Each agent has own cloned repository
 - Work on different tickets/areas
 - Sync via remote repository
 - Merge conflicts resolved via remote or locally
+- More disk space required
 
-**Recommended:** Option B (Multiple Local Copies) for true parallelism
+**Option C: Single Local Copy (Sequential)**
+- Agents work one at a time
+- Use lock file for coordination
+- Pull before starting, push when done
+- No true parallelism
 
-**Work Division:**
+**Recommended:** Option A (Git Worktrees) for same machine, Option B for different machines
+
+---
+
+#### Option A: Git Worktrees (Recommended)
+
+**What are Git Worktrees?**
+Git worktrees allow you to have multiple working directories for the same repository, each checked out to a different branch. This is more efficient than cloning the repository multiple times because:
+- Shared `.git` directory (saves disk space)
+- Shared object database
+- All worktrees share the same repository history
+- Each worktree has its own working directory and branch
+
+**Setup:**
+```bash
+# From main repository directory
+cd /path/to/project
+
+# Create worktree for Agent 1 (backend)
+git worktree add ../project-backend -b feature/T-001-database-setup
+
+# Create worktree for Agent 2 (frontend)
+git worktree add ../project-frontend -b feature/T-002-schema
+
+# Create worktree for Agent 3 (docs)
+git worktree add ../project-docs -b feature/T-003-documentation
+```
+
+**Workflow:**
+1. **Each agent works in their own worktree:**
+   - Agent 1: `cd ../project-backend` → works on `feature/T-001-database-setup`
+   - Agent 2: `cd ../project-frontend` → works on `feature/T-002-schema`
+   - Agent 3: `cd ../project-docs` → works on `feature/T-003-documentation`
+
+2. **Work independently:**
+   - Each agent commits in their own worktree
+   - No conflicts between worktrees (different branches)
+   - Shared repository means all branches are visible
+
+3. **Sync with remote:**
+   ```bash
+   # From any worktree
+   git push origin feature/T-001-database-setup
+   git push origin feature/T-002-schema
+   ```
+
+4. **Merge when complete:**
+   ```bash
+   # From main repository
+   git checkout staging
+   git pull origin staging
+   git merge feature/T-001-database-setup
+   git merge feature/T-002-schema
+   git push origin staging
+   ```
+
+5. **Clean up worktrees:**
+   ```bash
+   # Remove worktree (after branch is merged)
+   git worktree remove ../project-backend
+   git worktree remove ../project-frontend
+   ```
+
+**Useful Commands:**
+```bash
+# List all worktrees
+git worktree list
+
+# Create worktree from existing branch
+git worktree add ../project-wt1 feature/T-001
+
+# Create worktree and new branch
+git worktree add ../project-wt1 -b feature/T-001
+
+# Remove worktree
+git worktree remove ../project-wt1
+
+# Prune stale worktrees (removes worktrees for deleted branches)
+git worktree prune
+```
+
+**File Organization:**
+```
+project-root/
+├── .git/                    # Shared git directory
+├── src/                     # Main worktree (staging branch)
+├── README.md
+└── ...
+
+project-backend/             # Worktree 1 (feature/T-001)
+├── src/                     # Agent 1's working directory
+└── ...
+
+project-frontend/            # Worktree 2 (feature/T-002)
+├── src/                     # Agent 2's working directory
+└── ...
+```
+
+**Pros:**
+- ✅ True parallelism on same machine
+- ✅ No need for multiple clones (saves disk space)
+- ✅ Shared repository history
+- ✅ Each agent has isolated working directory
+- ✅ Easy to switch between branches
+- ✅ All branches visible from any worktree
+- ✅ Fast (no need to clone)
+- ✅ Perfect for agent-assisted development
+
+**Cons:**
+- ⚠️ Requires understanding of git worktrees
+- ⚠️ Need to manage worktree paths
+- ⚠️ Can't have same branch checked out in multiple worktrees
+- ⚠️ Need to coordinate merges
+
+**Best Practices:**
+1. **Organize worktree paths:**
+   ```bash
+   # Use descriptive names
+   git worktree add ../project-backend -b feature/T-001-backend
+   git worktree add ../project-frontend -b feature/T-002-frontend
+   git worktree add ../project-docs -b feature/T-003-docs
+   ```
+
+2. **Keep main repository clean:**
+   - Use main repository for integration/testing
+   - Use worktrees for active development
+
+3. **Regular cleanup:**
+   ```bash
+   # Remove worktrees after branches are merged
+   git worktree remove ../project-backend
+   ```
+
+**Example Workflow:**
+```bash
+# Setup: Create worktrees for 3 agents
+cd /path/to/project
+git checkout staging
+git pull origin staging
+
+git worktree add ../project-backend -b feature/T-001-database
+git worktree add ../project-frontend -b feature/T-002-schema
+git worktree add ../project-docs -b feature/T-003-documentation
+
+# Agent 1 works in ../project-backend
+cd ../project-backend
+# ... make changes ...
+git add .
+git commit -m "feat(db): add database setup"
+git push origin feature/T-001-database
+
+# Agent 2 works in ../project-frontend (simultaneously)
+cd ../project-frontend
+# ... make changes ...
+git add .
+git commit -m "feat(schema): add schema definition"
+git push origin feature/T-002-schema
+
+# When ready, merge from main repository
+cd /path/to/project
+git checkout staging
+git pull origin staging
+git merge feature/T-001-database
+git merge feature/T-002-schema
+git push origin staging
+
+# Cleanup
+git worktree remove ../project-backend
+git worktree remove ../project-frontend
+git worktree remove ../project-docs
+```
+
+---
+
+#### Option B: Multiple Local Copies (Different Machines)
+
+**Setup:**
+```bash
+# Each agent clones repository separately
+# Agent 1
+git clone <repo-url> project-agent1
+cd project-agent1
+git checkout -b feature/T-001-database-setup
+
+# Agent 2 (on different machine or different directory)
+git clone <repo-url> project-agent2
+cd project-agent2
+git checkout -b feature/T-002-schema
+```
+
+**Workflow:**
+- Each agent works in their own cloned repository
+- Sync via remote repository
+- Merge conflicts resolved via remote or locally
+
+**Pros:**
+- ✅ True parallelism
+- ✅ No local conflicts
+- ✅ Each agent has full copy
+- ✅ Can use PRs for review
+
+**Cons:**
+- ❌ Requires multiple clones (more disk space)
+- ❌ Need remote repository
+- ❌ Merge conflicts possible
+
+---
+
+#### Option C: Single Local Copy (Sequential)
+
+**Setup:**
+- Use lock file for coordination
+- Agents work one at a time
+
+**Workflow:**
+```bash
+# Before starting work
+if [ -f .agent-lock ]; then
+  echo "Another agent is working. Current agent: $(cat .agent-lock)"
+  exit 1
+fi
+echo "agent-1" > .agent-lock
+
+# Work on ticket
+git checkout staging
+git pull origin staging
+git checkout -b feature/T-001-database-setup
+# ... make changes ...
+git commit -m "feat: changes"
+git push origin feature/T-001-database-setup
+
+# After completing work
+rm .agent-lock
+```
+
+**Pros:**
+- ✅ Works with single local copy
+- ✅ No merge conflicts
+- ✅ Clear ownership
+
+**Cons:**
+- ❌ No true parallelism
+- ❌ Requires coordination
+- ❌ Potential waiting time
+
+**Not Recommended** - Use Git Worktrees (Option A) instead for better efficiency.
+
+---
+
+**Work Division (Applies to All Options):**
 - **Backend Agent:** `app/src/lib/server/**`, `app/src/routes/api/**`
 - **Frontend Agent:** `app/src/lib/components/**`, `app/src/routes/app/**`
 - **Docs Agent:** `docs/**`
@@ -110,7 +366,7 @@ git push origin v1.0.0
 **Coordination:**
 - Use ticket system to assign work
 - Document current work in tickets
-- Pull before starting: `git pull origin main`
+- Pull before starting: `git pull origin staging` (from main worktree or main repo)
 - Push frequently: `git push origin feature/T-XXX`
 - Coordinate merges to avoid conflicts
 
