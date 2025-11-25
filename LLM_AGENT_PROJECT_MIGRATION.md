@@ -39,6 +39,13 @@ This guide helps you migrate existing projects to the LLM agent-friendly structu
 4. **Tested:** Verify after each change
 5. **Documented:** Update docs as you migrate
 
+### Directory Naming Convention
+
+**For New System Documentation:**
+- **New Projects:** Use `docs/specs/` (recommended) or `docs/new-system/` - both are acceptable
+- **Migration Projects:** Use either `docs/specs/` or `docs/new-system/` - both are acceptable as long as old system docs are in `docs/old-system/`
+- **Key Point:** The name `specs` is perfectly fine and even recommended for new projects. In migrations, either name works as long as you maintain the `old-system/` directory for legacy documentation.
+
 ### When to Migrate
 
 **Good Candidates:**
@@ -78,6 +85,7 @@ find . -type d -maxdepth 3 -not -path '*/node_modules/*' -not -path '*/.git/*' >
 - [ ] Are there multiple applications/services?
 - [ ] What naming conventions are used? (camelCase, snake_case, kebab-case)
 - [ ] Are there existing tickets/issues? Where are they tracked?
+- [ ] For new system docs: Will you use `specs/` (recommended) or `new-system/`? Both are acceptable.
 
 ### 2. Documentation Audit
 
@@ -130,7 +138,7 @@ find . -type d -maxdepth 3 -not -path '*/node_modules/*' -not -path '*/.git/*' >
 ## Gaps Identified
 
 1. **Documentation Structure**
-   - Missing: `docs/new-system/` directory
+   - Missing: `docs/specs/` or `docs/new-system/` directory (use `specs/` for new projects, either is fine for migrations)
    - Missing: `docs/process/` directory
    - Current: All docs in root or scattered
 
@@ -227,7 +235,8 @@ project/
 ```
 project/
 ├── docs/
-│   ├── new-system/
+│   ├── specs/                     # Recommended for new projects
+│   │   # OR new-system/            # Also acceptable, especially in migrations
 │   │   ├── technical-architecture.md
 │   │   └── api-documentation.md
 │   └── process/
@@ -240,23 +249,27 @@ project/
 
 1. **Create new structure:**
    ```bash
-   mkdir -p docs/new-system docs/process
+   mkdir -p docs/specs docs/process
+   # OR: mkdir -p docs/new-system docs/process
+   # Both are acceptable; use specs/ for new projects (recommended)
    ```
 
 2. **Move and reorganize:**
    ```bash
-   mv ARCHITECTURE.md docs/new-system/technical-architecture.md
-   mv API.md docs/new-system/api-documentation.md
+   mv ARCHITECTURE.md docs/specs/technical-architecture.md
+   mv API.md docs/specs/api-documentation.md
    mv CONTRIBUTING.md docs/process/CONTRIBUTING.md
+   # OR use docs/new-system/ if you prefer
    ```
 
 3. **Update README.md:**
    ```markdown
    ## Documentation
    
-   - [Architecture](./docs/new-system/technical-architecture.md)
-   - [API Documentation](./docs/new-system/api-documentation.md)
+   - [Architecture](./docs/specs/technical-architecture.md)
+   - [API Documentation](./docs/specs/api-documentation.md)
    - [Contributing](./docs/process/CONTRIBUTING.md)
+   # OR use docs/new-system/ if you prefer
    ```
 
 4. **Update internal links:**
@@ -311,7 +324,9 @@ project/
 
 4. **Reorganize docs:**
    ```bash
-   mkdir -p docs/new-system docs/process docs/tickets
+   mkdir -p docs/specs docs/process docs/tickets
+   # OR: mkdir -p docs/new-system docs/process docs/tickets
+   # Both are acceptable; use specs/ for new projects (recommended)
    # Move and organize existing docs
    ```
 
@@ -329,7 +344,8 @@ project/
 ```
 project/
 ├── docs/
-│   ├── new-system/
+│   ├── specs/                     # Recommended for new projects
+│   │   # OR new-system/            # Also acceptable
 │   │   ├── feature-specification.md
 │   │   ├── technical-architecture.md
 │   │   └── development-setup.md
@@ -349,10 +365,12 @@ project/
 
 2. **Create documentation skeleton:**
    ```bash
-   mkdir -p docs/new-system docs/process
-   touch docs/new-system/feature-specification.md
-   touch docs/new-system/technical-architecture.md
-   touch docs/new-system/development-setup.md
+   mkdir -p docs/specs docs/process
+   # OR: mkdir -p docs/new-system docs/process
+   # Both are acceptable; use specs/ for new projects (recommended)
+   touch docs/specs/feature-specification.md
+   touch docs/specs/technical-architecture.md
+   touch docs/specs/development-setup.md
    touch docs/process/COMMITS.md
    touch docs/process/TICKETS.md
    ```
@@ -366,10 +384,12 @@ project/
 4. **Use code analysis:**
    ```bash
    # Analyze dependencies
-   npm list --depth=0 > docs/new-system/dependencies.md
+   npm list --depth=0 > docs/specs/dependencies.md
+   # OR: npm list --depth=0 > docs/new-system/dependencies.md
    
    # Analyze structure
-   find src -type f -name "*.ts" | head -20 > docs/new-system/file-structure.md
+   find src -type f -name "*.ts" | head -20 > docs/specs/file-structure.md
+   # OR: find src -type f -name "*.ts" | head -20 > docs/new-system/file-structure.md
    ```
 
 ### Scenario 4: Project with Different Naming Conventions
@@ -392,10 +412,11 @@ project/
    - Document rationale for each
 
 2. **Define target conventions:**
-   - Create `docs/new-system/DEVELOPMENT_SETUP.md#naming-conventions`
+   - Create `docs/specs/DEVELOPMENT_SETUP.md#naming-conventions` (or `docs/new-system/...`)
    - Document database naming
    - Document code naming
    - Document file naming
+   - **Note:** Use `specs/` for new projects (recommended), or `new-system/` in migrations. Both are acceptable.
 
 3. **Create migration plan:**
    - Prioritize (database first, then code)
@@ -457,7 +478,9 @@ project/
 
 1. **Create directory structure:**
    ```bash
-   mkdir -p docs/new-system docs/process docs/tickets
+   mkdir -p docs/specs docs/process docs/tickets
+   # OR: mkdir -p docs/new-system docs/process docs/tickets
+   # Both are acceptable; use specs/ for new projects (recommended)
    ```
 
 2. **Create `.cursorrules` file:**
@@ -487,9 +510,10 @@ project/
    - Identify what goes where
 
 2. **Move documentation:**
-   - Move architecture docs to `docs/new-system/`
+   - Move architecture docs to `docs/specs/` (or `docs/new-system/`)
    - Move process docs to `docs/process/`
    - Update all internal links
+   - **Note:** Use `specs/` for new projects (recommended), or `new-system/` in migrations. Both are acceptable as long as old system docs are in `old-system/`.
 
 3. **Create missing docs:**
    - Development setup guide
@@ -864,7 +888,8 @@ my-app/
 ```
 my-app/
 ├── docs/
-│   ├── new-system/
+│   ├── specs/                     # Recommended for new projects
+│   │   # OR new-system/            # Also acceptable
 │   │   ├── feature-specification.md
 │   │   └── development-setup.md
 │   └── process/
@@ -898,7 +923,8 @@ platform/
 ```
 platform/
 ├── docs/
-│   ├── new-system/
+│   ├── specs/                     # Recommended for new projects
+│   │   # OR new-system/            # Also acceptable, especially in migrations
 │   │   ├── technical-architecture.md
 │   │   └── module-system.md
 │   ├── process/
@@ -936,7 +962,8 @@ legacy-app/
 ├── docs/
 │   ├── old-system/
 │   │   └── implementation-specification.md
-│   ├── new-system/
+│   ├── specs/                     # Recommended for new projects
+│   │   # OR new-system/            # Also acceptable in migrations (when old-system/ exists)
 │   │   └── migration-plan.md
 │   └── migration/
 │       └── plan.md

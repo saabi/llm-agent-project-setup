@@ -52,7 +52,7 @@ LLM agents excel when:
 ### 1. Explicit Over Implicit
 
 **Bad:** "The schema follows standard patterns"  
-**Good:** "All tenant tables include `team_id UUID NOT NULL REFERENCES teams(id)`. See [Multi-Tenancy Architecture](./docs/new-system/MULTI_TENANCY.md) for details."
+**Good:** "All tenant tables include `team_id UUID NOT NULL REFERENCES teams(id)`. See [Multi-Tenancy Architecture](./docs/specs/MULTI_TENANCY.md) (or `./docs/new-system/...`) for details."
 
 ### 2. Document Decisions, Not Just Results
 
@@ -89,6 +89,8 @@ Fixes: Issue #42"
 
 **Note:** Choose between single-repo or monorepo structure based on project needs. See [Monorepo vs Single-Repo](#monorepo-vs-single-repo) section below.
 
+**Directory Naming:** For new system documentation, use `docs/specs/` for new projects (recommended) or `docs/new-system/` in migrations (when `old-system/` exists). Both names are acceptable and work equally well.
+
 #### Option 1: Single-Repo Structure
 
 Use for simple projects with a single application or service.
@@ -97,7 +99,8 @@ Use for simple projects with a single application or service.
 project-root/
 ├── docs/                          # All documentation
 │   ├── old-system/                # Legacy system docs (if migrating)
-│   ├── new-system/                # New system design docs
+│   ├── specs/                     # New system specs (recommended for new projects)
+│   │   # OR new-system/            # Alternative name (also acceptable)
 │   ├── migration/                 # Migration-specific docs
 │   ├── tickets/                   # Project tickets
 │   └── process/                   # Process documentation
@@ -118,7 +121,8 @@ Use for projects with multiple applications, services, or systems that share cod
 project-root/
 ├── docs/                          # Shared documentation
 │   ├── old-system/                # Legacy system docs (if migrating)
-│   ├── new-system/                # New system design docs
+│   ├── specs/                     # New system specs (recommended for new projects)
+│   │   # OR new-system/            # Alternative name (also acceptable, especially in migrations)
 │   ├── migration/                 # Migration-specific docs
 │   ├── tickets/                   # Project tickets
 │   └── process/                   # Process documentation
@@ -196,7 +200,8 @@ project-root/
 project-name/
 ├── docs/                          # All documentation
 │   ├── old-system/                # Legacy system docs (if migrating)
-│   ├── new-system/                # New system design docs
+│   ├── specs/                     # New system specs (recommended for new projects)
+│   │   # OR new-system/            # Alternative name (also acceptable, especially in migrations)
 │   ├── migration/                 # Migration-specific docs
 │   ├── tickets/                   # Project tickets
 │   └── process/                   # Process documentation
@@ -225,6 +230,7 @@ project-name/
 - **Location:** Always at project root, even in monorepos
 - **Purpose:** Shared documentation across all apps/systems
 - **Structure:** Organized by system (old/new), migration, tickets, process
+- **Naming:** Use `specs/` for new projects (recommended), or `new-system/` for migrations (when `old-system/` exists)
 
 **`docs/old-system/`** (Migration Projects Only)
 - Complete specification of legacy system
@@ -232,11 +238,12 @@ project-name/
 - Feature catalog and business rules
 - Unused code/object identification
 
-**`docs/new-system/`**
+**`docs/new-system/`** or **`docs/specs/`** (New System Specifications)
 - Feature specifications
 - Technical architecture
 - Design decisions and rationale
 - Naming conventions and standards
+- **Note:** For new projects, `specs` is recommended and perfectly acceptable. For migration projects, either name works as long as old system docs are in `old-system/`.
 
 **`docs/migration/`**
 - Migration plan and strategy
@@ -276,12 +283,12 @@ project-name/
 1. **Executive/Overview Documents**
    - `README.md` - Project overview, quick start
    - `docs/migration/plan.md` - Migration strategy (if applicable)
-   - `docs/new-system/feature-specification.md` - Complete feature catalog
+   - `docs/specs/feature-specification.md` (or `docs/new-system/...`) - Complete feature catalog
 
 2. **Architecture Documents**
-   - `docs/new-system/technical-architecture.md` - System design
-   - `docs/new-system/MULTI_TENANCY.md` - Architectural decisions
-   - `docs/new-system/BUSSINESS_LAYER.md` - Business logic organization
+   - `docs/specs/technical-architecture.md` (or `docs/new-system/...`) - System design
+   - `docs/specs/MULTI_TENANCY.md` (or `docs/new-system/...`) - Architectural decisions
+   - `docs/specs/BUSSINESS_LAYER.md` (or `docs/new-system/...`) - Business logic organization
 
 3. **Analysis Documents**
    - `docs/migration/comparison/legacy-vs-new-differences.md` - Feature comparison
@@ -294,8 +301,8 @@ project-name/
    - `docs/process/CODE_REVIEW.md` - Review process
 
 5. **Reference Documents**
-   - `docs/new-system/DEVELOPMENT_SETUP.md` - Developer onboarding
-   - `docs/new-system/NAMING_CONVENTIONS.md` - Coding standards
+   - `docs/specs/DEVELOPMENT_SETUP.md` (or `docs/new-system/...`) - Developer onboarding
+   - `docs/specs/NAMING_CONVENTIONS.md` (or `docs/new-system/...`) - Coding standards
    - `docs/tickets/TICKET_CREATION_GUIDE.md` - Ticket templates
 
 ### Documentation Patterns
@@ -417,7 +424,8 @@ Steps to implement the decision.
 2. **Create Documentation Skeleton**
    ```
    docs/                          # Always at root
-   ├── new-system/
+   ├── specs/                     # Recommended for new projects
+   │   # OR new-system/            # Also acceptable
    │   ├── feature-specification.md
    │   ├── technical-architecture.md
    │   └── development-setup.md
@@ -469,11 +477,13 @@ Steps to implement the decision.
 
 2. **Create Core Documents**
    - `README.md` - Project overview
-   - `docs/new-system/feature-specification.md` - Feature catalog
-   - `docs/new-system/technical-architecture.md` - System design
-   - `docs/new-system/development-setup.md` - Developer guide
+   - `docs/specs/feature-specification.md` (or `docs/new-system/...`) - Feature catalog
+   - `docs/specs/technical-architecture.md` (or `docs/new-system/...`) - System design
+   - `docs/specs/development-setup.md` (or `docs/new-system/...`) - Developer guide
    - `docs/process/COMMITS.md` - Commit guidelines
    - `docs/process/TICKETS.md` - Ticket guidelines
+   
+   **Note:** Use `specs/` for new projects (recommended), or `new-system/` if you prefer. Both are acceptable.
 
 3. **Set Up Version Control**
    - Initialize git repository
@@ -496,7 +506,7 @@ Steps to implement the decision.
    - See: docs/process/COMMITS.md
 
    ## Code Standards
-   - Follow naming conventions in docs/new-system/NAMING_CONVENTIONS.md
+   - Follow naming conventions in docs/specs/NAMING_CONVENTIONS.md (or docs/new-system/...)
    - Write tests for new features
    - Update documentation when changing behavior
    ```
@@ -564,9 +574,11 @@ Steps to implement the decision.
    docs/old-system/
    ├── implementation-specification.md  # Complete system spec
    ├── schema-analysis.md               # Database schema
-   ├── feature-catalog.md               # All features
+   ├── feature-catalog.md              # All features
    └── business-rules.md                # Business logic
    ```
+   
+   **Note:** When migrating, you can use either `docs/specs/` or `docs/new-system/` for the new system documentation. Both are acceptable as long as the old system docs are in `old-system/`.
 
 2. **Create Legacy Code Snapshot**
    ```
@@ -874,6 +886,8 @@ We use Lucia Auth for authentication.
 - Configuration: `app/src/lib/server/auth.config.ts`
 - Related: [Auth Setup Ticket](./tickets/phase-1/T-003-authentication-setup.md)
 
+**Note:** In the examples above, `docs/specs/` or `docs/new-system/` can be used interchangeably. Use `specs/` for new projects (recommended), or `new-system/` in migrations (when `old-system/` exists).
+
 **Dependencies:**
 - Drizzle ORM (for session storage)
 - PostgreSQL (for session table)
@@ -924,8 +938,8 @@ We use PostgreSQL with Drizzle ORM.
 We use PostgreSQL with Drizzle ORM. See:
 - [Database Setup](./tickets/phase-1/T-001-database-setup.md)
 - [Schema Definition](./tickets/phase-1/T-002B-tenant-schema-definition.md)
-- [Naming Conventions](./new-system/DEVELOPMENT_SETUP.md#naming-conventions)
-- [Multi-Tenancy Architecture](./new-system/MULTI_TENANCY.md)
+- [Naming Conventions](./specs/DEVELOPMENT_SETUP.md#naming-conventions) (or `./new-system/...`)
+- [Multi-Tenancy Architecture](./specs/MULTI_TENANCY.md) (or `./new-system/...`)
 ```
 
 ### 4. Document Decisions and Alternatives
@@ -943,7 +957,7 @@ Installments are generated in the business layer.
 
 Installments are generated in the business layer, not stored as database records.
 
-**Decision:** See [Installments and Audit Approaches](./new-system/CUOTAS_AND_AUDIT_APPROACHES.md#a-installments-approach)
+**Decision:** See [Installments and Audit Approaches](./specs/CUOTAS_AND_AUDIT_APPROACHES.md#a-installments-approach) (or `./new-system/...`)
 
 **Rationale:**
 - Installments are calculated values, not stored data
