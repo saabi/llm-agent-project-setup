@@ -19,6 +19,11 @@ This repository contains best practices, guidelines, and templates developed thr
 - **[Ticket Guidelines](./docs/process/TICKETS.md)** - Ticket composition and issue tracking best practices
 - **[Branch Management](./docs/process/BRANCH_MANAGEMENT.md)** - Git branch strategies for single and multiple agent workflows
 
+### Framework Guides
+
+- **[Framework Selection Guide](./docs/frameworks/FRAMEWORK_SELECTION.md)** - Choose the right frontend framework for your project
+- **[Framework Setup Guides](./docs/frameworks/)** - Framework-specific setup guides (SvelteKit, Next.js, React, Vue, etc.)
+
 ### Example Files
 
 - **`.cursorrules`** - Example Cursor IDE rules file that references the process guidelines
@@ -42,10 +47,12 @@ This repository contains best practices, guidelines, and templates developed thr
 
 ### For New Projects
 
-1. Read the [LLM Agent Project Setup Guide](./LLM_AGENT_PROJECT_SETUP.md)
-2. Copy the `.cursorrules` example and adapt it to your project
-3. Set up your project structure following the recommended patterns
-4. Configure your process guidelines in `docs/process/`
+1. **Choose a framework** (if building a web app): Read the [Framework Selection Guide](./docs/frameworks/FRAMEWORK_SELECTION.md)
+2. **Set up your framework**: Follow the appropriate [Framework Setup Guide](./docs/frameworks/)
+3. Read the [LLM Agent Project Setup Guide](./LLM_AGENT_PROJECT_SETUP.md)
+4. Copy the `.cursorrules` example and adapt it to your project
+5. Set up your project structure following the recommended patterns
+6. Configure your process guidelines in `docs/process/`
 
 ### For Existing Projects
 

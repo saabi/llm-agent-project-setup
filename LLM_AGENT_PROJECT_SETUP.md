@@ -417,11 +417,17 @@ Steps to implement the decision.
 
 ### Phase 1: Initial Structure
 
-1. **Decide: Single-Repo or Monorepo?**
+1. **Choose Frontend Framework (if building a web application)**
+   - See [Framework Selection Guide](./docs/frameworks/FRAMEWORK_SELECTION.md) for detailed comparison
+   - Consider: project type, team expertise, performance needs, LLM agent compatibility
+   - Document your decision: Create `docs/decisions/framework-selection.md`
+   - **Recommended:** SvelteKit or Next.js for excellent LLM agent support
+
+2. **Decide: Single-Repo or Monorepo?**
    - See [Monorepo vs Single-Repo](#monorepo-vs-single-repo) section
    - Start simple (single-repo) if unsure, can migrate later
 
-2. **Create Documentation Skeleton**
+3. **Create Documentation Skeleton**
    ```
    docs/                          # Always at root
    ├── specs/                     # Recommended for new projects
@@ -436,7 +442,17 @@ Steps to implement the decision.
        └── README.md
    ```
 
-3. **Create Application Structure**
+4. **Set Up Framework (if building a web application)**
+   - Follow the appropriate [Framework Setup Guide](./docs/frameworks/)
+   - Examples:
+     - [SvelteKit Setup Guide](./docs/frameworks/sveltekit/SETUP.md)
+     - [Next.js Setup Guide](./docs/frameworks/nextjs/SETUP.md)
+     - [React Setup Guide](./docs/frameworks/react/SETUP.md)
+     - [Vue.js Setup Guide](./docs/frameworks/vue/SETUP.md)
+   - Configure TypeScript (highly recommended for LLM agents)
+   - Set up development environment
+
+5. **Create Application Structure**
    
    **Single-Repo:**
    ```
@@ -447,7 +463,7 @@ Steps to implement the decision.
    
    **Monorepo (Full-Stack):**
    ```
-   app/                   # Full-stack application (SvelteKit, Next.js)
+   app/                   # Full-stack application (SvelteKit, Next.js, etc.)
    ├── src/
    ├── tests/
    └── package.json
@@ -474,8 +490,10 @@ Steps to implement the decision.
    
    package.json           # Root workspace config
    ```
+   
+   **Note:** The structure depends on your chosen framework. See framework-specific setup guides for detailed structure.
 
-2. **Create Core Documents**
+6. **Create Core Documents**
    - `README.md` - Project overview
    - `docs/specs/feature-specification.md` (or `docs/new-system/...`) - Feature catalog
    - `docs/specs/technical-architecture.md` (or `docs/new-system/...`) - System design
